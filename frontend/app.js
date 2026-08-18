@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://cloudguard-api-jdg3.onrender.com";
 
 
 // ============================================================
@@ -6,9 +6,7 @@ const API_URL = "http://127.0.0.1:8000";
 // ============================================================
 
 function getBoolean(id) {
-
     return document.getElementById(id).value === "true";
-
 }
 
 
@@ -17,9 +15,7 @@ function getBoolean(id) {
 // ============================================================
 
 function getCurrentState() {
-
     return {
-
         resource_type: "S3",
 
         resource_name:
@@ -57,7 +53,6 @@ function getCurrentState() {
                 "currentExploitability"
             ).value
     };
-
 }
 
 
@@ -66,9 +61,7 @@ function getCurrentState() {
 // ============================================================
 
 function getProposedState() {
-
     return {
-
         resource_type: "S3",
 
         resource_name:
@@ -106,7 +99,6 @@ function getProposedState() {
                 "proposedExploitability"
             ).value
     };
-
 }
 
 
@@ -139,7 +131,6 @@ async function analyzeChange() {
 
     button.disabled = true;
 
-
     button.querySelector(
         "span"
     ).textContent =
@@ -159,6 +150,10 @@ async function analyzeChange() {
         const resourceName =
             currentState.resource_name;
 
+
+        // ----------------------------------------------------
+        // CLOUDGUARD CHANGE ANALYSIS REQUEST
+        // ----------------------------------------------------
 
         const requestBody = {
 
@@ -185,31 +180,32 @@ async function analyzeChange() {
         };
 
 
+        // ----------------------------------------------------
+        // CALL DEPLOYED CLOUDGUARD API
+        // ----------------------------------------------------
+
         const response =
             await fetch(
-
                 `${API_URL}/analyze-change`,
-
                 {
-
                     method: "POST",
 
                     headers: {
-
                         "Content-Type":
                             "application/json"
-
                     },
 
                     body:
                         JSON.stringify(
                             requestBody
                         )
-
                 }
-
             );
 
+
+        // ----------------------------------------------------
+        // HANDLE API ERROR
+        // ----------------------------------------------------
 
         if (!response.ok) {
 
@@ -219,15 +215,24 @@ async function analyzeChange() {
             throw new Error(
                 `API Error ${response.status}: ${errorText}`
             );
-
         }
 
+
+        // ----------------------------------------------------
+        // READ RESPONSE
+        // ----------------------------------------------------
 
         const data =
             await response.json();
 
 
-        displayResults(data);
+        // ----------------------------------------------------
+        // DISPLAY RESULTS
+        // ----------------------------------------------------
+
+        displayResults(
+            data
+        );
 
 
         results.classList.remove(
@@ -236,19 +241,18 @@ async function analyzeChange() {
 
 
         results.scrollIntoView({
-
             behavior: "smooth",
-
             block: "start"
-
         });
-
 
     }
 
+
     catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
 
         errorBox.textContent =
@@ -262,9 +266,11 @@ async function analyzeChange() {
 
     }
 
+
     finally {
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
 
         button.querySelector(
@@ -283,7 +289,6 @@ async function analyzeChange() {
 
 function displayResults(data) {
 
-
     const risk =
         data.risk_analysis;
 
@@ -296,9 +301,9 @@ function displayResults(data) {
         data.deployment;
 
 
-    // --------------------------------------------------------
-    // RISK
-    // --------------------------------------------------------
+    // ========================================================
+    // RISK SUMMARY
+    // ========================================================
 
     document.getElementById(
         "beforeRisk"
@@ -331,11 +336,8 @@ function displayResults(data) {
     document.getElementById(
         "riskDelta"
     ).textContent =
-
         delta > 0
-
             ? `+${delta}`
-
             : `${delta}`;
 
 
@@ -345,10 +347,9 @@ function displayResults(data) {
         risk.impact;
 
 
-
-    // --------------------------------------------------------
-    // CHANGES
-    // --------------------------------------------------------
+    // ========================================================
+    // CHANGES DETECTED
+    // ========================================================
 
     const changesList =
         document.getElementById(
@@ -356,7 +357,8 @@ function displayResults(data) {
         );
 
 
-    changesList.innerHTML = "";
+    changesList.innerHTML =
+        "";
 
 
     const changes =
@@ -393,12 +395,18 @@ function displayResults(data) {
                     "change-item";
 
 
+                const securityImpact =
+                    change.security_impact || {};
+
+
                 item.innerHTML = `
 
                     <div class="change-property">
 
                         ${escapeHtml(
-                            change.property
+                            String(
+                                change.property
+                            )
                         )}
 
                     </div>
@@ -426,7 +434,10 @@ function displayResults(data) {
                     <span class="impact-label">
 
                         ${escapeHtml(
-                            change.security_impact.control
+                            String(
+                                securityImpact.control ||
+                                "NONE"
+                            )
                         )}
 
                     </span>
@@ -444,13 +455,15 @@ function displayResults(data) {
     }
 
 
-
-    // --------------------------------------------------------
-    // DEPENDENCIES
-    // --------------------------------------------------------
+    // ========================================================
+    // DEPENDENCY IMPACT
+    // ========================================================
 
     const dependencyData =
-        data.dependency_impact;
+        data.dependency_impact || {
+            affected_count: 0,
+            affected_resources: []
+        };
 
 
     document.getElementById(
@@ -465,12 +478,16 @@ function displayResults(data) {
         );
 
 
-    dependencyList.innerHTML = "";
+    dependencyList.innerHTML =
+        "";
+
+
+    const affectedResources =
+        dependencyData.affected_resources || [];
 
 
     if (
-        dependencyData.affected_resources
-            .length === 0
+        affectedResources.length === 0
     ) {
 
         dependencyList.innerHTML = `
@@ -487,39 +504,36 @@ function displayResults(data) {
 
     else {
 
-        dependencyData
-            .affected_resources
-            .forEach(
-                resource => {
+        affectedResources.forEach(
+            resource => {
 
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    item.className =
-                        "dependency-item";
-
-
-                    item.textContent =
-                        resource;
-
-
-                    dependencyList.appendChild(
-                        item
+                const item =
+                    document.createElement(
+                        "div"
                     );
 
-                }
-            );
+
+                item.className =
+                    "dependency-item";
+
+
+                item.textContent =
+                    resource;
+
+
+                dependencyList.appendChild(
+                    item
+                );
+
+            }
+        );
 
     }
 
 
-
-    // --------------------------------------------------------
+    // ========================================================
     // DECISION
-    // --------------------------------------------------------
+    // ========================================================
 
     document.getElementById(
         "decisionAction"
@@ -533,10 +547,9 @@ function displayResults(data) {
         decision.reason;
 
 
-
-    // --------------------------------------------------------
+    // ========================================================
     // DEPLOYMENT
-    // --------------------------------------------------------
+    // ========================================================
 
     document.getElementById(
         "deploymentText"
@@ -544,10 +557,9 @@ function displayResults(data) {
         deployment.deployment_status;
 
 
-
-    // --------------------------------------------------------
+    // ========================================================
     // RISK FACTORS
-    // --------------------------------------------------------
+    // ========================================================
 
     displayRiskFactors(
         risk.after_factors
@@ -570,11 +582,12 @@ function displayRiskFactors(
         );
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
     Object.entries(
-        factors
+        factors || {}
     ).forEach(
         ([name, value]) => {
 
@@ -626,7 +639,6 @@ function loadScenario(
     scenario
 ) {
 
-
     // --------------------------------------------------------
     // SECURITY IMPROVEMENT
     // --------------------------------------------------------
@@ -636,40 +648,25 @@ function loadScenario(
     ) {
 
         setCurrent(
-
             false,
-
             false,
-
             false,
-
             "HIGH",
-
             "HIGH",
-
             "HIGH"
-
         );
 
 
         setProposed(
-
             false,
-
             true,
-
             true,
-
             "HIGH",
-
             "HIGH",
-
             "HIGH"
-
         );
 
     }
-
 
 
     // --------------------------------------------------------
@@ -681,40 +678,25 @@ function loadScenario(
     ) {
 
         setCurrent(
-
             false,
-
             true,
-
             true,
-
             "HIGH",
-
             "HIGH",
-
             "HIGH"
-
         );
 
 
         setProposed(
-
             false,
-
             true,
-
             true,
-
             "CRITICAL",
-
             "HIGH",
-
             "HIGH"
-
         );
 
     }
-
 
 
     // --------------------------------------------------------
@@ -726,96 +708,84 @@ function loadScenario(
     ) {
 
         setCurrent(
-
             false,
-
             true,
-
             true,
-
             "HIGH",
-
             "HIGH",
-
             "HIGH"
-
         );
 
 
         setProposed(
-
             true,
-
             false,
-
             true,
-
             "HIGH",
-
             "HIGH",
-
             "HIGH"
-
         );
 
     }
 
 
     // --------------------------------------------------------
-    // Scroll to configuration
+    // SCROLL TO CONFIGURATION
     // --------------------------------------------------------
 
-    document
-        .querySelector(
+    const configurationGrid =
+        document.querySelector(
             ".configuration-grid"
-        )
-        .scrollIntoView({
+        );
 
+
+    if (configurationGrid) {
+
+        configurationGrid.scrollIntoView({
             behavior: "smooth",
-
             block: "start"
-
         });
+
+    }
 
 }
 
 
 // ============================================================
-// SET CURRENT
+// SET CURRENT STATE
 // ============================================================
 
 function setCurrent(
-
     publicAccess,
-
     encryption,
-
     logging,
-
     criticality,
-
     sensitivity,
-
     exploitability
-
 ) {
 
     document.getElementById(
         "currentPublicAccess"
     ).value =
-        String(publicAccess);
+        String(
+            publicAccess
+        );
 
 
     document.getElementById(
         "currentEncryption"
     ).value =
-        String(encryption);
+        String(
+            encryption
+        );
 
 
     document.getElementById(
         "currentLogging"
     ).value =
-        String(logging);
+        String(
+            logging
+        );
 
 
     document.getElementById(
@@ -839,41 +809,40 @@ function setCurrent(
 
 
 // ============================================================
-// SET PROPOSED
+// SET PROPOSED STATE
 // ============================================================
 
 function setProposed(
-
     publicAccess,
-
     encryption,
-
     logging,
-
     criticality,
-
     sensitivity,
-
     exploitability
-
 ) {
 
     document.getElementById(
         "proposedPublicAccess"
     ).value =
-        String(publicAccess);
+        String(
+            publicAccess
+        );
 
 
     document.getElementById(
         "proposedEncryption"
     ).value =
-        String(encryption);
+        String(
+            encryption
+        );
 
 
     document.getElementById(
         "proposedLogging"
     ).value =
-        String(logging);
+        String(
+            logging
+        );
 
 
     document.getElementById(
@@ -905,12 +874,10 @@ function formatFactorName(
 ) {
 
     return name
-
         .replaceAll(
             "_",
             " "
         )
-
         .replace(
             /\b\w/g,
             letter =>
@@ -928,7 +895,7 @@ function escapeHtml(
     value
 ) {
 
-    return value
+    return String(value)
 
         .replaceAll(
             "&",
