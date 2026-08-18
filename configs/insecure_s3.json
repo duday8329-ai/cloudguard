@@ -1,0 +1,7 @@
+{
+    "resource_type": "S3",
+    "resource_name": "cloudguard-demo-bucket",
+    "public_access": true,
+    "encryption": false,
+    "logging": false
+}

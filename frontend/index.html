@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>CloudGuard | Security Gate</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="shield">
+            🛡
+        </div>
+
+        <div>
+
+            <h1>CloudGuard</h1>
+
+            <p>
+                Change-Aware Cloud Security Gate
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="system-status">
+
+        <span class="status-dot"></span>
+
+        API ONLINE
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero">
+
+        <span class="badge">
+            CLOUD SECURITY CONTROL
+        </span>
+
+        <h2>
+            Analyze infrastructure changes
+            before deployment.
+        </h2>
+
+        <p>
+            CloudGuard compares the current and proposed
+            cloud configuration, evaluates security controls,
+            dependency impact and risk delta, then determines
+            whether deployment should proceed.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         DEMO SCENARIOS
+    ====================================================== -->
+
+    <section class="demo-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="badge">
+                    EXAMINER DEMO
+                </span>
+
+                <h3>
+                    Quick Scenarios
+                </h3>
+
+            </div>
+
+            <span class="section-help">
+                One-click demonstration
+            </span>
+
+        </div>
+
+
+        <div class="demo-grid">
+
+
+            <button
+                class="demo-card safe"
+                onclick="loadScenario('safe')"
+            >
+
+                <span class="demo-icon">
+                    ✓
+                </span>
+
+                <div>
+
+                    <strong>
+                        Security Improvement
+                    </strong>
+
+                    <small>
+                        Reduce security risk
+                    </small>
+
+                </div>
+
+            </button>
+
+
+
+            <button
+                class="demo-card moderate"
+                onclick="loadScenario('moderate')"
+            >
+
+                <span class="demo-icon">
+                    !
+                </span>
+
+                <div>
+
+                    <strong>
+                        Moderate Risk
+                    </strong>
+
+                    <small>
+                        Requires human review
+                    </small>
+
+                </div>
+
+            </button>
+
+
+
+            <button
+                class="demo-card critical"
+                onclick="loadScenario('critical')"
+            >
+
+                <span class="demo-icon">
+                    !
+                </span>
+
+                <div>
+
+                    <strong>
+                        Critical Change
+                    </strong>
+
+                    <small>
+                        Block deployment
+                    </small>
+
+                </div>
+
+            </button>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         CONFIGURATION
+    ====================================================== -->
+
+    <section class="configuration-grid">
+
+
+        <!-- =================================================
+             CURRENT STATE
+        ================================================== -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-number">
+                        01
+                    </span>
+
+                    <h3>
+                        Current State
+                    </h3>
+
+                </div>
+
+                <span class="state-label current">
+                    CURRENT
+                </span>
+
+            </div>
+
+
+
+            <label>
+                Resource Name
+            </label>
+
+            <input
+                id="resourceName"
+                type="text"
+                value="cloudguard-demo-bucket"
+            >
+
+
+
+            <label>
+                Public Access
+            </label>
+
+            <select id="currentPublicAccess">
+
+                <option value="false">
+                    Disabled
+                </option>
+
+                <option value="true">
+                    Enabled
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Encryption
+            </label>
+
+            <select id="currentEncryption">
+
+                <option value="true">
+                    Enabled
+                </option>
+
+                <option value="false">
+                    Disabled
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Logging
+            </label>
+
+            <select id="currentLogging">
+
+                <option value="true">
+                    Enabled
+                </option>
+
+                <option value="false">
+                    Disabled
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Resource Criticality
+            </label>
+
+            <select id="currentCriticality">
+
+                <option value="CRITICAL">
+                    CRITICAL
+                </option>
+
+                <option value="HIGH" selected>
+                    HIGH
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Data Sensitivity
+            </label>
+
+            <select id="currentSensitivity">
+
+                <option value="CRITICAL">
+                    CRITICAL
+                </option>
+
+                <option value="HIGH" selected>
+                    HIGH
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Exploitability
+            </label>
+
+            <select id="currentExploitability">
+
+                <option value="CRITICAL">
+                    CRITICAL
+                </option>
+
+                <option value="HIGH" selected>
+                    HIGH
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PROPOSED STATE
+        ================================================== -->
+
+        <div class="panel proposed-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-number">
+                        02
+                    </span>
+
+                    <h3>
+                        Proposed State
+                    </h3>
+
+                </div>
+
+                <span class="state-label proposed">
+                    PROPOSED
+                </span>
+
+            </div>
+
+
+
+            <label>
+                Public Access
+            </label>
+
+            <select id="proposedPublicAccess">
+
+                <option value="false" selected>
+                    Disabled
+                </option>
+
+                <option value="true">
+                    Enabled
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Encryption
+            </label>
+
+            <select id="proposedEncryption">
+
+                <option value="true" selected>
+                    Enabled
+                </option>
+
+                <option value="false">
+                    Disabled
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Logging
+            </label>
+
+            <select id="proposedLogging">
+
+                <option value="true" selected>
+                    Enabled
+                </option>
+
+                <option value="false">
+                    Disabled
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Resource Criticality
+            </label>
+
+            <select id="proposedCriticality">
+
+                <option value="CRITICAL">
+                    CRITICAL
+                </option>
+
+                <option value="HIGH" selected>
+                    HIGH
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Data Sensitivity
+            </label>
+
+            <select id="proposedSensitivity">
+
+                <option value="CRITICAL">
+                    CRITICAL
+                </option>
+
+                <option value="HIGH" selected>
+                    HIGH
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Exploitability
+            </label>
+
+            <select id="proposedExploitability">
+
+                <option value="CRITICAL">
+                    CRITICAL
+                </option>
+
+                <option value="HIGH" selected>
+                    HIGH
+                </option>
+
+                <option value="MEDIUM">
+                    MEDIUM
+                </option>
+
+                <option value="LOW">
+                    LOW
+                </option>
+
+            </select>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ANALYZE
+    ====================================================== -->
+
+    <section class="analyze-section">
+
+        <button
+            id="analyzeButton"
+            onclick="analyzeChange()"
+        >
+
+            <span>
+                ANALYZE CHANGE
+            </span>
+
+            <span class="arrow">
+                →
+            </span>
+
+        </button>
+
+
+        <p>
+            CloudGuard will evaluate the proposed change
+            before deployment.
+        </p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         RESULTS
+    ====================================================== -->
+
+    <section
+        id="results"
+        class="results hidden"
+    >
+
+
+        <!-- =================================================
+             RISK SUMMARY
+        ================================================== -->
+
+        <div class="risk-summary">
+
+            <div class="summary-title">
+
+                <span class="badge">
+                    SECURITY ASSESSMENT
+                </span>
+
+                <h2>
+                    Change Risk Analysis
+                </h2>
+
+            </div>
+
+
+            <div class="risk-cards">
+
+
+                <div class="risk-card">
+
+                    <span>
+                        BEFORE RISK
+                    </span>
+
+                    <strong id="beforeRisk">
+                        --
+                    </strong>
+
+                    <small id="beforeLevel">
+                        --
+                    </small>
+
+                </div>
+
+
+
+                <div class="risk-arrow">
+                    →
+                </div>
+
+
+
+                <div class="risk-card">
+
+                    <span>
+                        AFTER RISK
+                    </span>
+
+                    <strong id="afterRisk">
+                        --
+                    </strong>
+
+                    <small id="afterLevel">
+                        --
+                    </small>
+
+                </div>
+
+
+
+                <div class="risk-card delta">
+
+                    <span>
+                        RISK DELTA
+                    </span>
+
+                    <strong id="riskDelta">
+                        --
+                    </strong>
+
+                    <small id="impact">
+                        --
+                    </small>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             CHANGE + DEPENDENCY
+        ================================================== -->
+
+        <div class="details-grid">
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="panel-number">
+                            03
+                        </span>
+
+                        <h3>
+                            Changes Detected
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div id="changesList"></div>
+
+            </div>
+
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <span class="panel-number">
+                            04
+                        </span>
+
+                        <h3>
+                            Dependency Impact
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <div class="dependency-count">
+
+                    <strong id="dependencyCount">
+                        0
+                    </strong>
+
+                    <span>
+                        affected resources
+                    </span>
+
+                </div>
+
+
+                <div id="dependencyList"></div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             DECISION
+        ================================================== -->
+
+        <div
+            id="decisionPanel"
+            class="decision-panel"
+        >
+
+            <div>
+
+                <span class="badge">
+                    DEPLOYMENT DECISION
+                </span>
+
+                <h2 id="decisionAction">
+                    --
+                </h2>
+
+                <p id="decisionReason">
+                    --
+                </p>
+
+            </div>
+
+
+            <div
+                id="deploymentStatus"
+                class="deployment-status"
+            >
+
+                <span>
+                    DEPLOYMENT STATUS
+                </span>
+
+                <strong id="deploymentText">
+                    --
+                </strong>
+
+                <small id="deploymentAction">
+                    --
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             RISK FACTORS
+        ================================================== -->
+
+        <div class="panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <span class="panel-number">
+                        05
+                    </span>
+
+                    <h3>
+                        Risk Factors
+                    </h3>
+
+                </div>
+
+            </div>
+
+            <div class="factor-columns">
+
+                <div class="factor-group">
+                    <span class="factor-title">BEFORE CHANGE</span>
+                    <div
+                        id="beforeRiskFactors"
+                        class="factors"
+                    ></div>
+                </div>
+
+                <div class="factor-group">
+                    <span class="factor-title">AFTER CHANGE</span>
+                    <div
+                        id="riskFactors"
+                        class="factors"
+                    ></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel deployment-message-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <span class="panel-number">06</span>
+                    <h3>Deployment Gate Result</h3>
+                </div>
+
+            </div>
+
+            <div class="deployment-result-grid">
+
+                <div>
+                    <span class="result-label">ACTION</span>
+                    <strong id="deploymentActionLarge">--</strong>
+                </div>
+
+                <div>
+                    <span class="result-label">MESSAGE</span>
+                    <p id="deploymentMessage">--</p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+
+    <div
+        id="errorMessage"
+        class="error hidden"
+    ></div>
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <p>
+        CloudGuard • Change-Aware Cloud Security Gate
+    </p>
+
+    <span>
+        B.Tech CSE Capstone Project
+    </span>
+
+</footer>
+
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
